@@ -3,3 +3,31 @@
 - Finding Basic Blocks
 - Dominator Analysis
 - Post-dominator Analysis
+
+- Loop Detection
+- Preheader Insertion
+- Trip Count Calculation
+- Reducible Flow Graphs
+
+- Linearizing a Trace
+- Selecting a Trace (threshold)
+- Superblock
+	- trace selection
+	- tail duplication
+
+- Predicate code using CMPP
+- If-conversion
+	- loop backedge coalescing
+	- control dependence analysis (edge naming)
+	- control flow substituion
+		- create predicates
+		- CMPP insertion
+		- guard operations
+		- remove branches
+		- initialize predicates
+	- CMPP compaction
+- Hyperblock
+	- block selection: CONST * BB VAL / MAIN PATH VAL
+		- VAL: weight / num_ops
+	- tail duplication
+	- if-conversion
