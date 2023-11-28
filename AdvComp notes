@@ -1,0 +1,60 @@
+1. Control Flow Analysis and Optimization
+
+---------------------------------------------------------------
+
+control transfer == branch
+control flow: branching behavior of an application
+dynamic(execution) CF / static(compiler) CF
+
+Basic Block: operations with equivalent execution conditions
+When a BB starts
+- first operation
+- branch target
+- immediately after branch
+
+Control Flow Graph
+- note that there are pseudo nodes (entry, exit)
+Weighted CFG
+- control flow profiling -> annotate CFG -> weighted CFG
+
+Dominator
+- each BB dominates itself
+- if x domintates y, and y dominates z, then x dominates z
+- if x dominates z and y dominates z, then either x dominates y or y dominates x
+-> blocks that are guaranteed to have execute PRIOR to this block + ITSELF
+
+Dominator Analysis: top-down
+
+Immediate Dominator
+Dominator Tree
+
+Post Dominator
+-> blocks that are guaranteed to excutue AFTER this block + ITSELF
+
+Post Dominator Analysis: bottom-up 
+
+---------------------------------------------------------------
+
+Natural Loops
+Loop Detection
+Trip Count
+Reducible Flow Graphs
+
+---------------------------------------------------------------
+
+Regions
+Trace
+Superblock
+Hyperblock (CMPP, Control-dependence, If-conversion)
+
+---------------------------------------------------------------
+
+2. Data Flow Analysis and Optimization
+
+Data Flow Analysis
+
+---------------------------------------------------------------
+
+---------------------------------------------------------------
+
+3. Code Generation
