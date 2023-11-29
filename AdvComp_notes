@@ -212,6 +212,31 @@ recompute the expanded operation in a balanced binary tree -> maximize paralleli
 - Induction var (x = x + y, y in INVARIANT)
 	-> initialize to counter value
 * make sure to update operands as well
+
 ---------------------------------------------------------------
 
 3. Code Generation
+
+Virtual -> physical binding
+1. Scheduling
+2. Register allocation (not for exam)
+
+Data Dependences
+- RAW (true dep) : flow
+- WAW (false dep) : output
+- WAR (false dep) : anti
+- RAR (No dep)
+
+Estart: earliest start time (MAX(Estart(pred) + latency)
+Lstart: latest start time (MIN(Lstart(succ) - latency)
+Slack: measure of scheduling freedom (0 is critical, Lstart - Estart)
+
+Operation priority
+- height: distance from exit node == higher priority (MaxLstart - Lstart + 1)
+- slack: 0 slack == higher priority
+
+List Scheduling
+1. find READY
+2. if schedulable -> (1) mark RSRC busy (2) move from READY to PLACED
+3. else continue
+
