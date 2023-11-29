@@ -7,7 +7,7 @@
 
 - Average iteration count, def, formula
 	- trip count: how many times does the loop iterate? (obtained via control flow profiling)
-	- Averaget tro[ count = weight(header) / weight(preheader)
+	- Averaget trip count = weight(header) / weight(preheader)
 
 - trace lengthy -> possible pitfalls?
 	- layers of threshold -> on-trace may be too small
@@ -25,6 +25,9 @@
 - If-conversion pro-con
 	- If-conversion: algorithm for generating predicated code
 		- handle arbitrary complex graphs -> automatic & efficient!
+	- Pros:
+		- larger basic blocks
+		- convert control dependencies to data dependencies
 	- Cons:
 		- resource usage: if-converted BBs consume resources REGARDLESS of whether they are executed or not -> longer execution cycle
 		- dependent height: dependence height (aka schedule length with infinite resources) -> max(IC-BB1, IC-BB2) -> could grow! (bad!)
@@ -32,24 +35,24 @@
 
 - data flow analysis
 	- GEN/KILL/IN/OUT (for 4 kinds)
-		- LIVENESS (backward)
+		- LIVENESS (1) VARIABLES (2) GEN=CONSUMED (3) BACKWARDS (4) UNION
 			- GEN: set of external variables CONSUMED in the BB
 			- KILL: set of external variables KILLED(=DEFINED) by the BB
 			- IN: set of variables that are LIVE at the entry point of a BB
 			- OUT: set of variables that are LIVE at the exit point of a BB (UNION of SUCCESSORS)
-		- RDEF (forward)
+		- RDEF (1) OPERATIONS (2) GEN=DEFINED (3) FORWARDS (4) UNION
 			- GEN: set of operations DEFINED in the BB
 			- KILL: set of operations KILLED(=DEFINED) by the BB
 			- IN: set of operations that REACH the entry point of a BB (UNION of PREDECESSORS)
 			- OUT: set of operations that REACH the exit point of a BB
-		- ADEF
-			- GEN: set of external operations DEFINED in the BB
-			- KILL: set of external opeartions KILLED(=DEFINED) by the BB
+		- ADEF (1) OPERATIONS (2) GEN=DEFINED (3) FORWARDS (4) INTERSECT
+			- GEN: set of operations DEFINED in the BB
+			- KILL: set of opeartions KILLED(=DEFINED) by the BB
 			- IN: set of operations that are AVAILABLE at the entry point of a BB (INTERSECT of PREDECESSORS)
 			- OUT: set of operations that are AVAILABLE at the exit point of a BB
-		- AEXPR
-			- GEN
-			- KILL
+		- AEXPR (1) OPERATIONS (2) GEN=EXPRESSED (3) FORWARDS (4) INTERSECT
+			- GEN: set of operations EXPRESSED in the BB
+			- KILL:
 			- IN
 			- OUT
 	- Union, intersect <- when?
@@ -59,11 +62,13 @@
 - explain what SSA is, pro-con
 	- Static Single Assignment Form
 		- We give a unique name to each assignment to a variable
+		- this is possible because virtual registers are unlimited
 	- Pro
 		- no overlapping registers
 		- Def-Use chains become obvious based on register names
 	- Con
 		- phi nodes can make the code harder to transform
+
 - explain what LICM is
 	- Loop Invariant Code Motion
 		- Move operations whose source operands do not change within the loop to outside the loop
