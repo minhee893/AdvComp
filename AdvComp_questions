@@ -38,15 +38,15 @@
 			- IN: set of variables that are LIVE at the entry point of a BB
 			- OUT: set of variables that are LIVE at the exit point of a BB (UNION of SUCCESSORS)
 		- RDEF (forward)
-			- GEN: set of external variables DEFINED in the BB
-			- KILL: set of external variables KILLED(=DEFINED) by the BB
-			- IN: set of variables that REACH the entry point of a BB (UNION of PREDECESSORS)
-			- OUT: set of variables that REACH the exit point of a BB
+			- GEN: set of operations DEFINED in the BB
+			- KILL: set of operations KILLED(=DEFINED) by the BB
+			- IN: set of operations that REACH the entry point of a BB (UNION of PREDECESSORS)
+			- OUT: set of operations that REACH the exit point of a BB
 		- ADEF
-			- GEN: set of external variables DEFINED in the BB
-			- KILL: set of external variables KILLED(=DEFINED) by the BB
-			- IN: set of variables that are AVAILABLE at the entry point of a BB (INTERSECT of PREDECESSORS)
-			- OUT: set of variables that are AVAILABLE at the exit point of a BB
+			- GEN: set of external operations DEFINED in the BB
+			- KILL: set of external opeartions KILLED(=DEFINED) by the BB
+			- IN: set of operations that are AVAILABLE at the entry point of a BB (INTERSECT of PREDECESSORS)
+			- OUT: set of operations that are AVAILABLE at the exit point of a BB
 		- AEXPR
 			- GEN
 			- KILL

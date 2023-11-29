@@ -23,7 +23,7 @@ Dominator
 - if x dominates z and y dominates z, then either x dominates y or y dominates x
 -> blocks that are guaranteed to have execute PRIOR to this block + ITSELF
 
-Dominator Analysis: top-down
+Dominator Analysis: top-down & intersect of predecessors' doms
 
 Immediate Dominator
 Dominator Tree
@@ -31,27 +31,117 @@ Dominator Tree
 Post Dominator
 -> blocks that are guaranteed to excutue AFTER this block + ITSELF
 
-Post Dominator Analysis: bottom-up 
+Post Dominator Analysis: bottom-up & intersect of successors' p-doms
 
 ---------------------------------------------------------------
 
 Natural Loops
+- LoopBB: BBs that comprise the loop
+- header: dominates all LoopBB
+- backedge: edge[x->y] where y dominates x
+- preheader: new block before the header (all others are retargeted to preheader)
 Loop Detection
+- each backedge defines a loop
+- merge loops with the same header
+
+Nesting
+- nesting depth
+	- outer loop: 1
+	- inner loop: depth(parent loop) + 1
 Trip Count
+- how many times does the loop iterate, on average
+- avg trip count = weight(header) / weight(preheader)
+
 Reducible Flow Graphs
 
 ---------------------------------------------------------------
 
 Regions
+- basic blocks are too small
+- intermediate sized regions with simple control flow!
+
 Trace
+- linear collection of basic blocks that tend to execute in sequence
+	- side entrace
+	- side exit
+- longer traces aren't always better
+	- longer trace -> on-trace may reduce
+	- on-trace/off-trace trade-off is heuristic dependent
+- algorithm
+	- beware: cumulative probability is ignored when applying threshold
+
 Superblock
+- linear collection of basic blocks that tend to execute in sequence (TRACE)
+  ... in which control flow may only enter at the first BB (= NO SIDE ENTRANCE)
+- algorithm
+	- trace selection
+	- eliminate side entrance
+		- tail duplication -> redirect -> adjust weights
+- when to apply
+	- set upper limit on code expansion: 1.0-1.1x
+	- tradeoff: code-size increase / side entrace elimination
+
+<predicates>
+- pro/con
+	- pro
+		- no branches, no mispredicts
+		- can freely reorder independent operations in the predicated block
+		- overlap BB2 with BB5 and BB6
+	- costs
+		- worst case schedule length
+		- worst case resources required
+- CMPP
+	- 2 targets for computing taken/fall-through conditions with 1 operation
+- Control Dependence
+	- name edges
+	- traverse immediate post dominators and add the edge
+- If conversion
+	- loop backedge coalescing
+	- control dependence anlysis
+	- control flow substitution
+		- create predicates: 1 predicate per 1 CD set, CMPP OR-type
+		- CMPP insertion: at the edges in CD set!
+		- Guard operations (insert predicates)
+		- remove branches (insert predicates)
+		- initialize predicates: initialize to 0 in the first BB
+	- CMPP compaction: OR to UN types, remove init for UN
+	
+	- pro
+		- larger basic blocks
+		- convert control dependencies to data dependencies
+	- con
+		- resource usage
+		- dependence height
+		- hazard presence
+
 Hyperblock (CMPP, Control-dependence, If-conversion)
+- block selection
+- tail duplication
+- if conversion
 
 ---------------------------------------------------------------
 
 2. Data Flow Analysis and Optimization
 
 Data Flow Analysis
+
+1. Liveness
+- GEN/KILL
+	- start from the last op in block, bottom up
+	- dest: +KILL -GEN
+	- src:  +GEN  -KILL
+- IN/OUT
+	- init IN to 0
+	- OUT: UNION(successors' IN)
+	- IN: GEN + OUT - KILL
+	
+2. Reaching Def
+- GEN/KILL
+	- start from the first op in block, top down
+	- G: op
+	- K: all ops defining dest - op
+	- GEN = G + GEN - K
+	- KILL = K + KILL - G
 
 ---------------------------------------------------------------
 
