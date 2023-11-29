@@ -1,0 +1,90 @@
+- Dominator analysis
+	- top-down
+	- Rule: BB + {intersect of DOM of all predecessors}
+- Post-dominator analysis
+	- bottom-up
+	- Rule: BB + {intersect of PDOM of all successors}
+
+- Average iteration count, def, formula
+	- trip count: how many times does the loop iterate? (obtained via control flow profiling)
+	- Averaget tro[ count = weight(header) / weight(preheader)
+
+- trace lengthy -> possible pitfalls?
+	- layers of threshold -> on-trace may be too small
+	- on-trace/off-trace trade-off is heuristic-dependent
+	
+- Draw Superblock
+	- goal: eliminate side entrances (we keep side exits)
+	- step1: select trace
+		- there is only ONE trace in examples
+	- step2: tail duplication
+		- Identify side entrace
+		- replicate all BBs and redirect
+		- adjust weights
+
+- If-conversion pro-con
+	- If-conversion: algorithm for generating predicated code
+		- handle arbitrary complex graphs -> automatic & efficient!
+	- Cons:
+		- resource usage: if-converted BBs consume resources REGARDLESS of whether they are executed or not -> longer execution cycle
+		- dependent height: dependence height (aka schedule length with infinite resources) -> max(IC-BB1, IC-BB2) -> could grow! (bad!)
+		- hazard presence: e.g. subroutine call, pointer store -> makes optimization difficult when if-conversionend
+
+- data flow analysis
+	- GEN/KILL/IN/OUT (for 4 kinds)
+		- LIVENESS (backward)
+			- GEN: set of external variables CONSUMED in the BB
+			- KILL: set of external variables KILLED(=DEFINED) by the BB
+			- IN: set of variables that are LIVE at the entry point of a BB
+			- OUT: set of variables that are LIVE at the exit point of a BB (UNION of SUCCESSORS)
+		- RDEF (forward)
+			- GEN: set of operations DEFINED in the BB
+			- KILL: set of operations KILLED(=DEFINED) by the BB
+			- IN: set of operations that REACH the entry point of a BB (UNION of PREDECESSORS)
+			- OUT: set of operations that REACH the exit point of a BB
+		- ADEF
+			- GEN: set of external operations DEFINED in the BB
+			- KILL: set of external opeartions KILLED(=DEFINED) by the BB
+			- IN: set of operations that are AVAILABLE at the entry point of a BB (INTERSECT of PREDECESSORS)
+			- OUT: set of operations that are AVAILABLE at the exit point of a BB
+		- AEXPR
+			- GEN
+			- KILL
+			- IN
+			- OUT
+	- Union, intersect <- when?
+		- UNION: Liveness, Reaching def
+		- INTERSECT: Available defs, Available exprs
+
+- explain what SSA is, pro-con
+	- Static Single Assignment Form
+		- We give a unique name to each assignment to a variable
+	- Pro
+		- no overlapping registers
+		- Def-Use chains become obvious based on register names
+	- Con
+		- phi nodes can make the code harder to transform
+- explain what LICM is
+	- Loop Invariant Code Motion
+		- Move operations whose source operands do not change within the loop to outside the loop
+	- Caveats
+		- Does the operation execute at every iteration?
+
+- slack, def, formula
+	- def: measure of scheduling freedom; larger slack means more mobility, 0 means critical
+	- formula: Lstart - Estart for each node
+	
+
+
++++ 2023
+- immediate pdom
+- immediate dom
+- Average iteration count -> why can it change
+- trace, superblock, hyperblock -> pros/cons, what they are, why they are needed
+- SSA what is it, when do Phi-nodes appear
+- Liveness GEN/KILL, IN/OUT algorithm
+	- UNION, INTERSECT when
+- CSE rules and algorithm
+- why there are many opportunities for constant folding
+- Estart, Lstart, critical path
+- how to remove 2 out of 3 data dependencies
