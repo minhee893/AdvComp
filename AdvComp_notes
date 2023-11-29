@@ -142,9 +142,76 @@ Data Flow Analysis
 	- K: all ops defining dest - op
 	- GEN = G + GEN - K
 	- KILL = K + KILL - G
+	
+<the rest is too cumbersome, just memorize the quadraplane...>
 
 ---------------------------------------------------------------
 
+Classic Optimizations
+
+1. dead code elimination
+remove any operation who's result is never consumed
+start from the last(bottom) critical operation, and follow UD chain
+
+2. local constant propagation
+inside a block, forward propagate r{X} = C (C is a constant or a literal)
+
+3. global constant propagation
+between blocks, forward propaget...
+
+4. constant folding
+evaluate the op, and
+(1) replace the op
+(2) remove a branch or a conditional
+
+5. forward copy propagation
+forward propagate RHS of moves (e.g. r1 = r2)
+
+6. CSE
+eliminate recomputation of an expression by reusing the previous result
+expr(X) must be available at point Y!
+
+7. LICM
+Loop invariant code motion
+move operations whose source operands do not change within the loop to the loop preheader
+
+8. Global variable migration
+- assign a global variable temporarily to a register for the duration of the loop
+- only for load / store
+	- load: preheader
+	- store: exit point
+
+9. Induction Variable Strength Reduction
+- create basic induction variable from dervied induction variables
+- BIV: e.g. x = x + 1 (has itself)
+- DIV: e.g. y = x + C (y = BIV {* << + -} C)
+- steps (x: src BIV, y: DIV)
+	- insert new_reg = RHS(X) in preheader
+	- insert new_inc = increment in bottom of preheader
+	- insert new_reg += new_inc after update of x
+	- change y = new_reg
+
+ILP Optimizations
+Instruction level parallelism optimizations
+
+increase the amount of parallelism to overlap operations
+(trade-off: parallelism / extra instructions)
+
+1. Back-substitution
+basically, expand operations
+e.g. r13 = r1 + r2 + r3 -r4 + r5 -r6
+
+2. tree height reduction
+recompute the expanded operation in a balanced binary tree -> maximize parallelism
+
+3. Optimizing unrolled loops
+- Register Renaming
+- Accumulator (x = x + y, y is VARIANT)
+	-> initialize to 0
+	-> sum up AFTER loop
+- Induction var (x = x + y, y in INVARIANT)
+	-> initialize to counter value
+* make sure to update operands as well
 ---------------------------------------------------------------
 
 3. Code Generation
